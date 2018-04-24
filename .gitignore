@@ -83,7 +83,8 @@ x64/*
 !Bootstrap.lib
 x86/
 bld/
-[Bb]in/
+[Bb]in/*
+!fmodL64.dll
 [Oo]bj/
 [Ll]og/
 
