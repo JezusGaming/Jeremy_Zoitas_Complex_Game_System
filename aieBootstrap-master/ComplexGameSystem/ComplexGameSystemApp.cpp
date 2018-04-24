@@ -22,6 +22,7 @@ bool ComplexGameSystemApp::startup() {
 	AD->OnCreate();
 	AD->LoadAudio("../bin/audio/background_music.ogg");
 	AD->PlayAudio();
+	AD->FrequencyAnalysis();
 	return true;
 }
 
@@ -34,6 +35,7 @@ void ComplexGameSystemApp::shutdown() {
 void ComplexGameSystemApp::update(float deltaTime) {
 
 	AD->UpdateAudio();
+	
 
 	// input example
 	aie::Input* input = aie::Input::getInstance();
