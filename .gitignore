@@ -72,13 +72,15 @@ $RECYCLE.BIN/
 *.userprefs
 
 # Build results
-[Dd]ebug/
+[Dd]ebug/*
+!fmodL64.dll
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
 x64/*
 !x64/glfw3.lib
 !glfw3.lib
+!Bootstrap.lib
 x86/
 bld/
 [Bb]in/
