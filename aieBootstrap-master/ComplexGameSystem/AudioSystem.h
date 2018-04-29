@@ -24,7 +24,7 @@ private:
 	FMOD::ChannelGroup* m_pChannelGroup;
 	FMOD::DSP* m_pDSP;
 	FMOD_RESULT result;
-	FMOD_DSP_PARAMETER_FFT *m_pFFT;
+	FMOD_DSP_PARAMETER_FFT *m_pFFT = nullptr;
 	
 	// Normalization toggle and sample size
 	//bool enableNormalize;

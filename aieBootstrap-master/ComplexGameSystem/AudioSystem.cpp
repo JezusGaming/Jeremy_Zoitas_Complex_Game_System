@@ -17,6 +17,7 @@ AudioSystem::AudioSystem()
 	//beatIgnoreLastTick = 0;
 	//
 	//musicStartTick = 0;
+	//m_pFFT = new FMOD_DSP_PARAMETER_FFT();
 }
 
 
@@ -33,7 +34,7 @@ bool AudioSystem::OnCreate()
 		ErrorCheck(result);
 		return false;
 	}
-	result = m_pSystem->init(512, FMOD_INIT_NORMAL, NULL);
+	result = m_pSystem->init(32, FMOD_INIT_NORMAL, NULL);
 	if (result != FMOD_OK) 
 { 
 		ErrorCheck(result);
@@ -44,13 +45,13 @@ bool AudioSystem::OnCreate()
 
 void AudioSystem::LoadAudio(const char* audio)
 {
-	result = m_pSystem->createSound(audio, FMOD_DEFAULT, 0, &m_pSound);
+	result = m_pSystem->createSound(audio, FMOD_LOOP_NORMAL, 0, &m_pSound);
 }
 
 void AudioSystem::PlayAudio()
 {
-	result = m_pSystem->createChannelGroup("MyChannelGroup", &m_pChannelGroup);
-	result = m_pSystem->playSound(m_pSound, m_pChannelGroup, false, &m_pChannel);
+	
+	result = m_pSystem->playSound(m_pSound, 0, false, &m_pChannel);
 }
 
 void AudioSystem::UpdateAudio()
@@ -84,18 +85,50 @@ void AudioSystem::OnDestroy()
 
 void AudioSystem::FrequencyAnalysis()
 {
-	m_pSystem->createDSPByType(FMOD_DSP_TYPE::FMOD_DSP_TYPE_FFT, &m_pDSP);
-	m_pChannel->addDSP(FMOD_DSP_TYPE_FFT, m_pDSP);
-	m_pFFT = new FMOD_DSP_PARAMETER_FFT();
-	m_pDSP->getParameterData(FMOD_DSP_FFT_SPECTRUMDATA, (void **)m_pFFT, 0, 0, 0);
-	for (int channel = 0; channel < m_pFFT->numchannels; channel++)
+
+	// OnCreate()
+	//
+	const uint32_t windowSize = 1024;
+	result = m_pSystem->getMasterChannelGroup(&m_pChannelGroup);
+
+	// Create a DSP by type and add to master channel group
+	result = m_pSystem->createDSPByType(FMOD_DSP_TYPE_FFT, &m_pDSP);
+	result = m_pDSP->setParameterInt(FMOD_DSP_FFT_WINDOWTYPE, FMOD_DSP_FFT_WINDOW_HANNING);
+	result = m_pDSP->setParameterInt(FMOD_DSP_FFT_WINDOWSIZE, windowSize * 2);
+	result = m_pChannelGroup->addDSP(FMOD_CHANNELCONTROL_DSP_HEAD, m_pDSP);
+
+	void* spectrumData;
+	result = m_pDSP->getParameterData(FMOD_DSP_FFT_SPECTRUMDATA, (void **)&spectrumData, 0, 0, 0);
+	FMOD_DSP_PARAMETER_FFT* fft = (FMOD_DSP_PARAMETER_FFT*)m_pSound;
+	if (fft)
 	{
-		for (int bin = 0; bin < m_pFFT->length; bin++)
+		for (int i = 0; i<fft->numchannels; ++i)
 		{
-			float freqVal = m_pFFT->spectrum[channel][bin];
-			std::cout << freqVal << std::endl;
+			// Only read / display half of the buffer typically for analysis 
+			// as the 2nd half is usually the same data reversed due to the nature of the way FFT works.
+			int len = fft->length / 2;
+			for (int i = 0; i<len; ++i)
+			{
+				// Do something with fft->spectrum[i]
+				float* freqVal = m_pFFT->spectrum[i];
+				std::cout << freqVal << std::endl;
+			}
 		}
 	}
+
+	//m_pSystem->createDSPByType(FMOD_DSP_TYPE::FMOD_DSP_TYPE_FFT, &m_pDSP);
+	//m_pChannel->addDSP(FMOD_DSP_TYPE_FFT, m_pDSP);
+	////int window = 512;
+	////m_pDSP->setParameterInt(FMOD_DSP_FFT_WINDOWSIZE, window);
+	//m_pDSP->getParameterData(FMOD_DSP_FFT_SPECTRUMDATA, (void **)m_pFFT, 0, 0, 0);
+	//for (int channel = 0; channel < m_pFFT->numchannels; channel++)
+	//{
+	//	for (int bin = 0; bin < m_pFFT->length; bin++)
+	//	{
+	//		float freqVal = m_pFFT->spectrum[channel][bin];
+	//		std::cout << freqVal << std::endl;
+	//	}
+	//}
 }
 
 int AudioSystem::ErrorCheck(FMOD_RESULT result) {
