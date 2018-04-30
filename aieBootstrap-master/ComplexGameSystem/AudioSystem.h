@@ -13,10 +13,11 @@ public:
 	void LoadAudio(const char* audio);
 	void PlayAudio();
 	void UpdateAudio();
+	void Pause(bool paused);
 	void OnDestroy();
-	void FrequencyAnalysis();
+	float FrequencyAnalysis();
 	int AudioSystem::ErrorCheck(FMOD_RESULT result);
-
+	float f[32];
 private:
 	FMOD::System* m_pSystem;
 	FMOD::Sound* m_pSound;
@@ -24,13 +25,13 @@ private:
 	FMOD::ChannelGroup* m_pChannelGroup;
 	FMOD::DSP* m_pDSP;
 	FMOD_RESULT result;
-	FMOD_DSP_PARAMETER_FFT *m_pFFT = nullptr;
 	
-	// Normalization toggle and sample size
+	
+	 //Normalization toggle and sample size
 	//bool enableNormalize;
 	//int sampleSize;
 
-	// Beat detection parameters
+	 //Beat detection parameters
 	//float beatThresholdVolume;
 	//int beatThresholdBar;
 	//unsigned int beatSustain;
@@ -39,11 +40,11 @@ private:
 	//int beatLastTick;
 	//int beatIgnoreLastTick;
 
-	// List of how many ms ago the last beats were
+	 //List of how many ms ago the last beats were
 	//std::queue<int> beatTimes;
 	//unsigned int beatTrackCutoff;
 
-	// When the music was last unpaused
+	 //When the music was last unpaused
 	//int musicStartTick;
 };
 
