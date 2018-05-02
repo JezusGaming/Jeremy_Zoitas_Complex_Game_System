@@ -2,22 +2,7 @@
 
 AudioSystem::AudioSystem()
 {
-	// Load song
-	//enableNormalize = true;
-	//sampleSize = 64;
-
-	// Set beat detection parameters
-	//beatThresholdVolume = 0.3f;
-	//beatThresholdBar = 0;
-	//beatSustain = 150;
-	//beatPostIgnore = 250;
-	//beatTrackCutoff = 10000;
-	//
-	//beatLastTick = 0;
-	//beatIgnoreLastTick = 0;
-	//
-	//musicStartTick = 0;
-	//m_pFFT = new FMOD_DSP_PARAMETER_FFT();
+	m_fIntensity = 1000;
 }
 
 
@@ -34,7 +19,7 @@ bool AudioSystem::OnCreate()
 		ErrorCheck(result);
 		return false;
 	}
-	result = m_pSystem->init(32, FMOD_INIT_NORMAL, NULL);
+	result = m_pSystem->init(512, FMOD_INIT_NORMAL, NULL);
 	if (result != FMOD_OK) 
 { 
 		ErrorCheck(result);
@@ -51,10 +36,10 @@ void AudioSystem::LoadAudio(const char* audio)
 void AudioSystem::PlayAudio()
 {
 	result = m_pChannel->setVolume(1.0f);
-	
+
 	result = m_pSystem->playSound(m_pSound, 0, false, &m_pChannel);
 
-	const uint32_t windowSize = 1024;
+	const uint32_t windowSize = 128;
 	result = m_pSystem->getMasterChannelGroup(&m_pChannelGroup);
 
 	// Create a DSP by type and add to master channel group
@@ -98,14 +83,14 @@ void AudioSystem::OnDestroy()
 	m_pSystem->release();
 }
 
-float AudioSystem::FrequencyAnalysis()
+float AudioSystem::FrequencyAnalysis(bool bPlaying)
 {
 	FMOD_DSP_PARAMETER_FFT *m_pFFT;
 
 	//void* spectrumData;
 	result = m_pDSP->getParameterData(FMOD_DSP_FFT_SPECTRUMDATA, (void **)&m_pFFT, 0, 0, 0);
 	//FMOD_DSP_PARAMETER_FFT* fft = (FMOD_DSP_PARAMETER_FFT*)m_pSound;
-	if (m_pFFT)
+	if (m_pFFT && bPlaying)
 	{
 
 		for (int channel = 0; channel<1; ++channel)
@@ -121,13 +106,15 @@ float AudioSystem::FrequencyAnalysis()
 				
 				float freqVal = m_pFFT->spectrum[channel][bin];
 				//std::cout << freqVal << std::endl;
-				f[bin] = freqVal * 1000;
+				SpectrumData[bin] = freqVal * m_fIntensity;
 				
-				if (bin >= 32)
+				/*if (bin >= 64)
 				{
 					return 0;
-				}
+				}*/
+				
 			}
+			return 0;
 		}
 	}
 	return 0;
@@ -152,4 +139,24 @@ int AudioSystem::ErrorCheck(FMOD_RESULT result) {
 	}
 	// cout << "FMOD all good" << endl;
 	return 0;
+}
+
+float AudioSystem::GetIntensity()
+{
+	return m_fIntensity;
+}
+
+void AudioSystem::SetIntensity(float Intensity)
+{
+	m_fIntensity = Intensity;
+}
+
+void AudioSystem::SetVolume(float Volume)
+{
+	result = m_pChannel->setVolume(Volume);
+}
+
+void AudioSystem::ReleaseSound()
+{
+	m_pSound->release();
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "AudioSystem.h"
+#include "AudioSystemUI.h"
 #include "Application.h"
 #include "Renderer2D.h"
 
@@ -16,7 +16,7 @@ public:
 	virtual void draw();
 
 protected:
-	AudioSystem * AD;
+	AudioSystemUI * audioSystemUI;
 	aie::Renderer2D*	m_2dRenderer;
 	aie::Font*			m_font;
 	float freq;

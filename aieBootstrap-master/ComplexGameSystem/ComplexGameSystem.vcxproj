@@ -166,11 +166,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AudioSystem.cpp" />
+    <ClCompile Include="AudioSystemUI.cpp" />
     <ClCompile Include="ComplexGameSystemApp.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioSystem.h" />
+    <ClInclude Include="AudioSystemUI.h" />
     <ClInclude Include="ComplexGameSystemApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
