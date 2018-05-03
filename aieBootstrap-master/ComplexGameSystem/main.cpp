@@ -6,7 +6,7 @@ int main() {
 	auto app = new ComplexGameSystemApp();
 
 	// initialise and loop
-	app->run("AIE", 1280, 720, false);
+	app->run("Audio Visualizer", 1900, 1000, false);
 
 	// deallocation
 	delete app;
