@@ -118,7 +118,7 @@ void ComplexGameSystemApp::draw() {
 		// Checks if i is less than 265 and greater than 212 then decreases the green value.
 		else if (i >= 212 && i < 265)
 		{
-			G = 1 - ((i - 53) * 0.16);
+			G = 1 - ((i - 212) * 0.16);
 			m_2dRenderer->setRenderColour(R, G, B, 1);
 		}
 		// Checks if i is less than 320 and greater than 265 then decreases the blue value.
