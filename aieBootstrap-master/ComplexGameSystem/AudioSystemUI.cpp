@@ -40,6 +40,12 @@ AudioSystemUI::~AudioSystemUI()
 	// Calls the audio system destroy which releases things, and etc.
 	m_pAudioSystem->OnDestroy();
 
+	// Deletes m_chBuf.
+	delete m_chBuf;
+
+	// Deletes m_chFileDir.
+	delete m_chFileDir;
+
 	// Deletes m_pAudioSystem.
 	delete m_pAudioSystem;
 }
