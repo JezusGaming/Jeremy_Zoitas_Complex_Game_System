@@ -22,14 +22,11 @@ AudioSystemUI::AudioSystemUI()
 	// Initializes m_fVolume 1.0f.
 	m_fVolume = 1.0f;
 
-	// Initializes m_chBuf to an example of what to put in the input text.
-	m_chBuf = new char[256]{"SKRILLEX.mp3"};
-
 	// Initializes m_chFileDir to the folder location of the audio.
-	m_chFileDir = new char[256]{ "../bin/audio/" };
+	m_chFileDir = new char[256]{ "C:/Users/User/Music/SKRILLEX.mp3" };
 
 	// Loads an audio file to start to prevent errors.
-	m_pAudioSystem->LoadAudio("../bin/audio/SKRILLEX.mp3");
+	m_pAudioSystem->LoadAudio("C:/Users/User/Music/SKRILLEX.mp3");
 }
 
 //----------------------------------------------------------------------------------------------
@@ -41,7 +38,7 @@ AudioSystemUI::~AudioSystemUI()
 	m_pAudioSystem->OnDestroy();
 
 	// Deletes m_chBuf.
-	delete m_chBuf;
+	//delete m_chBuf;
 
 	// Deletes m_chFileDir.
 	delete m_chFileDir;
@@ -123,7 +120,7 @@ void AudioSystemUI::Update()
 	m_pAudioSystem->SetVolume(m_fVolume);
 	
 	// Creates text input box whixh is used to load audio.
-	ImGui::InputText("File Directory", m_chBuf, 256);
+	ImGui::InputText("File Directory", m_chFileDir, 256);
 
 	// Indents the buttons
 	ImGui::Indent(85);
@@ -134,13 +131,8 @@ void AudioSystemUI::Update()
 	{
 		// If the load button is pressed then release the Sound.
 		m_pAudioSystem->ReleaseSound();
-		// Sets FileDir, FileName, to the already created chars or the inputed name.
-		std::string FileDir = m_chFileDir;
-		std::string FileName = m_chBuf;
-		// Then adds them together.
-		std::string FullFile = FileDir + FileName;
-		// Lastly converts it back to a const char pointer so it can be used in load audio.
-		const char* chFullFile = FullFile.c_str();
+		// Lastly converts it to a const char pointer so it can be used in load audio.
+		const char* chFullFile = m_chFileDir;
 		m_pAudioSystem->LoadAudio(chFullFile);
 		// Sets m_bPlaying to false;
 		m_bPlaying = false;
